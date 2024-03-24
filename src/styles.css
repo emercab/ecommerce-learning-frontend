@@ -166,12 +166,12 @@ button.toast-close-button {
 }
 
 .ngx-toastr {
-  background-color: #030303;
+  background-color: #616161;
   pointer-events: auto;
 }
 
 .toast-success {
-  background-color: #51A351;
+  background-color: #81d681;
 }
 
 .toast-error {

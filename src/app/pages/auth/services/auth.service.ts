@@ -23,6 +23,7 @@ export class AuthService {
   public initAuth(): void {
     const token = localStorage.getItem('token');
     const user = localStorage.getItem('user');
+
     if (token) {
       this.token = token;
       this.user = user ? JSON.parse(user ?? '') : null;
@@ -31,11 +32,11 @@ export class AuthService {
   
   
   public login(email: string, password: string): Observable<any> {
-    const url = `${URL_SERVICES}auth/login`;
+    const url = `${URL_SERVICES}auth/login-ecommerce`;
     const loginData = { email, password };
+
     return this._http.post(url, loginData).pipe(
       map((resp: any) => {
-        console.log(resp);
         const result = this.saveLocalStorage(resp);
         return result;
       }),
@@ -60,6 +61,21 @@ export class AuthService {
   public register(data: any): Observable<any> {
     const url = `${URL_SERVICES}auth/register`;
     return this._http.post(url, data).pipe(
+      map((resp: any) => {
+        console.log(resp);
+        return resp;
+      }),
+      catchError((err: any) => {
+        console.log(err);
+        return of(err);
+      })
+    )
+  }
+
+
+  public verifyEmail(code: string): Observable<any> {
+    const url = `${URL_SERVICES}auth/login/verify-email`;
+    return this._http.post(url, { code }).pipe(
       map((resp: any) => {
         console.log(resp);
         return resp;
