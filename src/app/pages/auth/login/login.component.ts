@@ -83,7 +83,7 @@ export class LoginComponent implements OnInit {
             return;
           }
 
-          if (resp) {
+          if (resp.login) {
             this._helper.toaster('Login successful.', 'Welcome', 'success');
             this._router.navigate(['/']);
           }

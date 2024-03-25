@@ -37,8 +37,9 @@ export class AuthService {
 
     return this._http.post(url, loginData).pipe(
       map((resp: any) => {
+        console.log(resp);
         const result = this.saveLocalStorage(resp);
-        return result;
+        return resp;
       }),
       catchError((err: any) => {
         console.log(err);
@@ -77,7 +78,49 @@ export class AuthService {
     const url = `${URL_SERVICES}auth/login/verify-email`;
     return this._http.post(url, { code }).pipe(
       map((resp: any) => {
-        console.log(resp);
+        return resp;
+      }),
+      catchError((err: any) => {
+        console.log(err);
+        return of(err);
+      })
+    )
+  }
+
+
+  public sendCodeToResetPassword(email: string): Observable<any> {
+    const url = `${URL_SERVICES}auth/forgot-password`;
+    return this._http.post(url, { email }).pipe(
+      map((resp: any) => {
+        console.log({resp});
+        return resp;
+      }),
+      catchError((err: any) => {
+        console.log(err);
+        return of(err);
+      })
+    )
+  }
+
+
+  public verifyCodeToResetPassword(code: string): Observable<any> {
+    const url = `${URL_SERVICES}auth/verify-set-password`;
+    return this._http.post(url, { code }).pipe(
+      map((resp: any) => {
+        return resp;
+      }),
+      catchError((err: any) => {
+        console.log(err);
+        return of(err);
+      })
+    )
+  }
+
+
+  public setNewPassword(code: string, newPassword: string): Observable<any> {
+    const url = `${URL_SERVICES}auth/set-new-password`;
+    return this._http.post(url, { code, newPassword }).pipe(
+      map((resp: any) => {
         return resp;
       }),
       catchError((err: any) => {

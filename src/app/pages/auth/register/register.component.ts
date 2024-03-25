@@ -44,7 +44,7 @@ export class RegisterComponent {
 
     this._authService.register(data)
       .subscribe((resp: any) => {
-        if (resp) {
+        if (resp.registered) {
           this._helper.toaster('User registered successfully.', 'Success', 'success');
           this._router.navigate(['/login']);
         }
