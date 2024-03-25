@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
+import { Injectable, afterNextRender, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable, catchError, map, of } from 'rxjs';
+import { BehaviorSubject, Observable, catchError, map, of } from 'rxjs';
 import { URL_SERVICES } from '../../../config/config';
 
 @Injectable({
@@ -9,14 +9,17 @@ import { URL_SERVICES } from '../../../config/config';
 })
 export class AuthService {
 
+  public token: string = '';
+  public user: any = null;
+  private _isLogged: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+
   private _http: HttpClient = inject(HttpClient);
   private _router: Router = inject(Router);
 
-  public token: string = '';
-  public user: any = null;
-
   constructor() {
-    this.initAuth();
+    afterNextRender(() => {
+      this.initAuth();
+    });
   }
 
 
@@ -29,8 +32,8 @@ export class AuthService {
       this.user = user ? JSON.parse(user ?? '') : null;
     }
   }
-  
-  
+
+
   public login(email: string, password: string): Observable<any> {
     const url = `${URL_SERVICES}auth/login-ecommerce`;
     const loginData = { email, password };
@@ -39,6 +42,10 @@ export class AuthService {
       map((resp: any) => {
         console.log(resp);
         const result = this.saveLocalStorage(resp);
+        if (!result) {
+          return of({ error: 'Error al guardar el token.' });
+        }
+        this._isLogged.next(true);
         return resp;
       }),
       catchError((err: any) => {
@@ -92,7 +99,7 @@ export class AuthService {
     const url = `${URL_SERVICES}auth/forgot-password`;
     return this._http.post(url, { email }).pipe(
       map((resp: any) => {
-        console.log({resp});
+        console.log({ resp });
         return resp;
       }),
       catchError((err: any) => {
@@ -138,6 +145,12 @@ export class AuthService {
     this.token = '';
     this.user = null;
 
+    this._isLogged.next(false);
     this._router.navigate(['/login']);
+  }
+
+
+  public isLogged(): Observable<boolean> {
+    return this._isLogged.asObservable();
   }
 }

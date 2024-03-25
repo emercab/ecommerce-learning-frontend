@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, afterNextRender } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './shared/header/header.component';
 import { FooterComponent } from './shared/footer/footer.component';
@@ -17,12 +17,14 @@ export class AppComponent {
   title = 'ecommerce';
 
   constructor() {
-    // Hack to make jQuery work with Angular
-    setTimeout(() => {
-      HOMEINIT($);
-    }, 50);
-    $(window).on('load', function () {
-      $("#loading").fadeOut(500);
+    afterNextRender(() => {
+      // Hack to make jQuery work with Angular
+      setTimeout(() => {
+        HOMEINIT($);
+      }, 50);
+      $(window).on('load', function () {
+        $("#loading").fadeOut(500);
+      });
     });
   }
 }

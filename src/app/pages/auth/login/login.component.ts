@@ -95,7 +95,9 @@ export class LoginComponent implements OnInit {
   }
 
 
-  public showSuccess() {
-    //this._toastr.success('Hello world!', 'Toastr fun!');
-  }
+  public logout(): void {
+    this._authService.logout();
+  } 
+
+
 }

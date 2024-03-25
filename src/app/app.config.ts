@@ -6,13 +6,15 @@ import { provideToastr } from 'ngx-toastr';
 
 
 import { routes } from './app.routes';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withFetch } from '@angular/common/http';
+import { provideClientHydration } from '@angular/platform-browser';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideRouter(routes),
-    provideHttpClient(), // required http client request
     provideAnimations(), // required animations providers
-    provideToastr(), // required toastr providers
+    provideClientHydration(), // required toastr providers
+    provideHttpClient( withFetch() ), // required http client request
+    provideRouter(routes),
+    provideToastr(),
   ]
 };
